@@ -1,4 +1,4 @@
-package com.mancini.prova0.client;
+package com.mancini.prova0.client.home;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;

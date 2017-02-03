@@ -3,6 +3,7 @@ package com.mancini.prova0.client;
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.user.client.Window;
 
 public class AppActivityMapper implements ActivityMapper {
     private ClientFactory clientFactory;
@@ -14,10 +15,18 @@ public class AppActivityMapper implements ActivityMapper {
 
     @Override
     public Activity getActivity(Place place) {
-        if (place instanceof HelloPlace)
-            return new HelloActivity((HelloPlace) place, clientFactory);
-        //else if (place instanceof GoodbyePlace)
-        //    return new GoodbyeActivity((GoodbyePlace) place, clientFactory);
-        return null;
+    	
+    	if(place instanceof MyPlace) {
+    		MyPlace<?> mp = (MyPlace<?>)place;
+
+    		//i'm not confortable with the bus inside the clientfactory so ...
+    		MyActivity a = mp.getActivity(clientFactory.getEventBus(),clientFactory);    		
+    		
+    		return a;
+    	}
+    	
+    	
+    	Window.alert("ERROR: unknow place: " + place);
+    	return null;
     }
 }

@@ -1,4 +1,4 @@
-package com.mancini.prova0.client;
+package com.mancini.prova0.client.applayout;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -6,8 +6,9 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+
+import gwt.material.design.client.ui.MaterialContainer;
 
 public class AppView extends Composite implements AcceptsOneWidget {
 
@@ -18,17 +19,32 @@ public class AppView extends Composite implements AcceptsOneWidget {
 
 	public AppView() {
 		initWidget(uiBinder.createAndBindUi(this));
+
 	}
 
-	
-	@UiField
-	SimplePanel body;
 
+	@UiField
+	MaterialContainer body;
+
+	@UiField
+	Menu menu;
+	
 
 	@Override
 	public void setWidget(IsWidget w) {
-		body.setWidget(w);
+
+		body.clear();
+
+		//needed cause MAterialContainer and HTMLPanel actually have problems with null
+		// widget insertions, that is common with a&p
+		if(w == null) 
+			return; 
+
+		body.add(w);
 	}
-	
+
+	public Menu getMenu() {
+		return menu;
+	}
 
 }

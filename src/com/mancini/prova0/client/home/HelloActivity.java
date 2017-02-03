@@ -1,13 +1,13 @@
-package com.mancini.prova0.client;
+package com.mancini.prova0.client.home;
 
-import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.mancini.prova0.client.ClientFactory;
+import com.mancini.prova0.client.MyActivity;
 
-public class HelloActivity extends AbstractActivity implements HelloView.Presenter {
+public class HelloActivity extends MyActivity implements HelloView.Presenter {
     // Used to obtain views, eventBus, placeController
-    // Alternatively, could be injected via GIN
     private ClientFactory clientFactory;
     // Name that will be appended to "Hello,"
     private String name;
@@ -23,17 +23,17 @@ public class HelloActivity extends AbstractActivity implements HelloView.Present
     @Override
     public void start(AcceptsOneWidget containerWidget, EventBus eventBus) {
         HelloView helloView = clientFactory.getHelloView(this);
-        helloView.setName(name);
+        helloView.setName(name);        
         containerWidget.setWidget(helloView.asWidget());
     }
 
-    /**
-     * Ask user before stopping this activity
-     */
-    @Override
-    public String mayStop() {
-        return "Please hold on. This activity is stopping.";
-    }
+//    /**
+//     * Ask user before stopping this activity
+//     */
+//    @Override
+//    public String mayStop() {
+//        return "Please hold on. This activity is stopping.";
+//    }
 
     /**
      * Navigate to a new Place in the browser
