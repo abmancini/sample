@@ -5,9 +5,49 @@
          version="2.5"
          xmlns="http://java.sun.com/xml/ns/javaee">
   
-  <!-- Default page to serve -->
-  <welcome-file-list>
-    <welcome-file>Prova0.html</welcome-file>
-  </welcome-file-list>
+
+<servlet>
+	<servlet-name>AuthServlet</servlet-name>
+	<servlet-class>com.mancini.prova0.server.AuthServlet</servlet-class>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>AuthServlet</servlet-name>
+	<url-pattern>/auth/*</url-pattern>
+</servlet-mapping>
+
+<servlet>
+	<servlet-name>AuthServletCallback</servlet-name>
+	<servlet-class>com.mancini.prova0.server.AuthServletCallback</servlet-class>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>AuthServletCallback</servlet-name>
+	<url-pattern>/oauth2callback/*</url-pattern>
+</servlet-mapping>
+
+
+<servlet>
+	<servlet-name>HostPageWriter</servlet-name>
+	<servlet-class>com.mancini.prova0.server.HostPage</servlet-class>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>HostPageWriter</servlet-name>
+	<url-pattern></url-pattern>
+</servlet-mapping>
+
+
+<servlet>
+	<servlet-name>Logout</servlet-name>
+	<servlet-class>com.mancini.prova0.server.Logout</servlet-class>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>Logout</servlet-name>
+	<url-pattern>/logout</url-pattern>
+</servlet-mapping>
+
+
 
 </web-app>

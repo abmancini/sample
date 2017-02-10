@@ -2,6 +2,7 @@ package com.mancini.prova0.client;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.activity.shared.ActivityMapper;
@@ -10,6 +11,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
@@ -18,6 +24,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import com.mancini.prova0.client.applayout.AppView;
+import com.mancini.prova0.client.applayout.AppView.Presenter;
 import com.mancini.prova0.client.applayout.SimpleMenuEntry;
 import com.mancini.prova0.client.home.HelloPlace;
 import com.mancini.prova0.client.info.InfoPlace;
@@ -27,7 +34,7 @@ import gwt.material.design.client.constants.IconType;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class Prova0 implements EntryPoint, UncaughtExceptionHandler, ScheduledCommand {
+public class Prova0 implements EntryPoint, UncaughtExceptionHandler, ScheduledCommand, Presenter {
 
 	
 	public static class MenuEntryData {
@@ -68,6 +75,7 @@ public class Prova0 implements EntryPoint, UncaughtExceptionHandler, ScheduledCo
 	public void execute() {
 		//get the user data from the hostpage
 		Dictionary currentUser = Dictionary.getDictionary("currentUser");
+		Dictionary currentUserMoreData = Dictionary.getDictionary("currentUserMoreData");
 		
 		if(currentUser == null) {
 			Window.alert("No User Info Available");
@@ -76,7 +84,7 @@ public class Prova0 implements EntryPoint, UncaughtExceptionHandler, ScheduledCo
 		
 		ClientFactory clientFactory = GWT.create(ClientFactory.class);
 
-		AppView appView = clientFactory.getAppView();
+		AppView appView = clientFactory.getAppView(this);
 
 		EventBus eventBus = clientFactory.getEventBus();
 		PlaceController placeController = clientFactory.getPlaceController();
@@ -94,14 +102,42 @@ public class Prova0 implements EntryPoint, UncaughtExceptionHandler, ScheduledCo
 
 		
 		
-		appView.getMenu().setCurrentUserName(currentUser.get("displayName"));
+		
+		//naive and cumbersome, a native type for userinfo would be really better
+		Set<String> attrs = currentUser.keySet();
+		Set<String> moreAttrs = currentUserMoreData.keySet();
+		
+		String picture = null;
+		if(attrs.contains("picture") && moreAttrs.contains("realPicture"))
+			picture = currentUser.get("picture");
+		
+		String name = currentUser.get("name");
+		//String email = currentUser.get("email");
+		
+		
+		if(name == null || name.trim().length() == 0) { //use the email as a fallback
+			name = currentUser.get("email");
+		}
+		
+		
+		 
+		appView.getMenu().setCurrentUserDisplayData(name,picture);
 
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		//setup the menu
 		for( MenuEntryData me: mainMenu ) {
 			appView.getMenu().addMenuEntry( new SimpleMenuEntry(me, clientFactory));
 		}
 
+		
 		
 		
 		
@@ -121,6 +157,35 @@ public class Prova0 implements EntryPoint, UncaughtExceptionHandler, ScheduledCo
 	public void onUncaughtException(Throwable e) {
 		Window.alert("Fatal Error: " + e.getMessage());
 		e.printStackTrace();
+	}
+
+
+
+
+	//We impement AppView PResenter 
+	@Override
+	public void logout() {		
+		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, "/logout");
+		try {
+			requestBuilder.sendRequest("", new RequestCallback() {
+				
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+						if(response.getStatusCode() == Response.SC_OK) 
+							Window.Location.reload(); //reload so that the application will behave as not authenticated 
+						else
+							Window.alert("Problem during logout: " + response.getStatusCode() + " " + response.getStatusText() );
+				}
+				@Override
+				public void onError(Request request, Throwable exception) {
+					Window.alert("ERROR during logout: " + exception.getMessage() );
+				}
+			});
+		} catch (RequestException e) {
+			e.printStackTrace();
+			Window.alert("Exception during logout: " + e.getMessage() );
+
+		}
 	}
 
 }
