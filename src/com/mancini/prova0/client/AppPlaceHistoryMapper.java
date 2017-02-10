@@ -5,8 +5,6 @@ import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.mancini.prova0.client.home.HelloPlace;
 import com.mancini.prova0.client.info.InfoPlace;
 
-import gwt.material.design.client.constants.IconType;
-
 //@WithTokenizers({HelloPlace.Tokenizer.class,InfoPlace.Tokenizer.class})
 public class AppPlaceHistoryMapper implements PlaceHistoryMapper {
 
