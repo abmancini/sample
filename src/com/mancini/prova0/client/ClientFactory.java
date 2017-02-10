@@ -22,9 +22,11 @@ public class ClientFactory {
     
     
     //@Override 
-    public AppView getAppView() { 	
+    public AppView getAppView(AppView.Presenter presenter) { 	
     	if(appView == null)
     		appView = new AppView();
+    	
+    	appView.setPresenter(presenter);
         return appView;
     }
 

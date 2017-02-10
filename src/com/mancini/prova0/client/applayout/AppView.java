@@ -17,6 +17,18 @@ public class AppView extends Composite implements AcceptsOneWidget {
 	interface AppViewUiBinder extends UiBinder<Widget, AppView> {
 	}
 
+	
+	//the presenter of this view
+	public interface Presenter extends Menu.Presenter { //we embed a Menu that needs his own presenter 
+		
+	}
+
+	private Presenter presenter;
+	public void setPresenter(Presenter presenter) {
+		this.presenter= presenter;
+		menu.setPresenter(this.presenter); // we should take care of the embedded menu's presenter.
+	}
+	
 	public AppView() {
 		initWidget(uiBinder.createAndBindUi(this));
 
