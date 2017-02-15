@@ -8,8 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.google.api.services.oauth2.model.Userinfoplus;
-import com.google.api.services.plus.model.Person;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.mancini.prova0.shared.UserData;
 
 public class HostPage extends HttpServlet {
 
@@ -35,20 +37,26 @@ public class HostPage extends HttpServlet {
 		if(session == null) { //no session, auth
 			response.sendRedirect(UNAUTHENTICATED_REDIRECT_DESTINATION);
 		} else {
-			Userinfoplus userinfo = (Userinfoplus) session.getAttribute("userinfo");
-			Person me_person = (Person) session.getAttribute("me_person");
 			
-			if(userinfo == null) { //invalid session
+			UserData userData = (UserData) session.getAttribute("userData");
+			
+			if(userData == null) { //invalid session
 				session.invalidate();
 				response.sendRedirect(UNAUTHENTICATED_REDIRECT_DESTINATION);	
 			} else {		
-				generateHostpage(response,userinfo, !(me_person.getImage().getIsDefault()));
+
+				//serialize usrData in JSON (using autobeans)
+				AutoBean<UserData> bean = AutoBeanUtils.getAutoBean(userData);
+				String userDataJson = AutoBeanCodex.encode(bean).getPayload();
+				//System.err.println(userDataJson);
+				
+				generateHostpage(response,userDataJson);
 			}
 		}
 	}
 
 
-		private void generateHostpage(HttpServletResponse response, Userinfoplus userinfo, boolean realPicture) throws IOException {
+		private void generateHostpage(HttpServletResponse response, String userDataJson) throws IOException {
 
 			response.setContentType("text/html");
 			PrintWriter out = response.getWriter();
@@ -63,11 +71,7 @@ public class HostPage extends HttpServlet {
 			out.println("</head>");
 			out.println("<body>");
 			out.println("<script type=\"text/javascript\">");
-			out.println("var currentUser = " + userinfo.toPrettyString() +"");
-			if(realPicture)
-				out.println("var currentUserMoreData = {\"realPicture\" : true};");
-			else
-				out.println("var currentUserMoreData = {}");
+			out.println("var currentUser = " + userDataJson+";");
 			out.println("</script>");
 			out.println("<noscript>");
 			out.println("<div style=\"width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif\">");

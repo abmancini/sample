@@ -17,6 +17,9 @@ import com.google.api.services.oauth2.Oauth2;
 import com.google.api.services.oauth2.model.Userinfoplus;
 import com.google.api.services.plus.Plus;
 import com.google.api.services.plus.model.Person;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
+import com.mancini.prova0.shared.UserData;
 
 
 public class AuthServletCallback extends AbstractAuthorizationCodeCallbackServlet {
@@ -41,16 +44,33 @@ public class AuthServletCallback extends AbstractAuthorizationCodeCallbackServle
 				.setApplicationName("GobettiVoltaSample").build();
 		Person me_person = plus.people().get(userinfo.getId()).setFields("image").execute();
 
+		
+		//create an UserData for the user
+		UserData.Factory userDataFactory = AutoBeanFactorySource.create(UserData.Factory.class);
+		AutoBean<UserData> userDataBean = userDataFactory.newInstance();
+		UserData userData = userDataBean.as();
+		
+		userData.setId(userinfo.getId());
+		userData.setEmail(userinfo.getEmail());
+		userData.setName( userinfo.getName());
+		userData.setPicture( userinfo.getPicture() );
+				
+		if(me_person == null || me_person.getImage() == null || me_person.getImage().getIsDefault() == null) 
+			userData.setSilhouette(false) ; //no enough data so leave the picture used
+		else
+			userData.setSilhouette( me_person.getImage().getIsDefault() );
 
 		
-		//put data in the session
-		HttpSession session = req.getSession(true); //create or get the sessions
-
 		
-		session.setAttribute("userinfo", userinfo);
-		session.setAttribute("me_person", me_person);
+		//create or get the sessions
+		HttpSession session = req.getSession(true); 
 
-		
+		//put data in the session		
+		session.setAttribute("userData", userData);
+		//not needed, matter of choice if keep 
+		//session.setAttribute("userinfo", userinfo);
+		//session.setAttribute("me_person", me_person);
+
 		//redirect to the application that will use the data in the session
 		resp.sendRedirect("/");
 	}
@@ -60,7 +80,6 @@ public class AuthServletCallback extends AbstractAuthorizationCodeCallbackServle
 			HttpServletRequest req, HttpServletResponse resp, AuthorizationCodeResponseUrl errorResponse)
 					throws ServletException, IOException {
 		resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Something went wrong: " + errorResponse.getError());
-
 	}
 
 

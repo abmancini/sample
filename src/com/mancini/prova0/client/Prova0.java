@@ -2,7 +2,6 @@ package com.mancini.prova0.client;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.activity.shared.ActivityMapper;
@@ -16,7 +15,6 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
@@ -28,8 +26,11 @@ import com.mancini.prova0.client.applayout.AppView.Presenter;
 import com.mancini.prova0.client.applayout.SimpleMenuEntry;
 import com.mancini.prova0.client.home.HelloPlace;
 import com.mancini.prova0.client.info.InfoPlace;
+import com.mancini.prova0.shared.UserData;
 
 import gwt.material.design.client.constants.IconType;
+import jsinterop.annotations.JsPackage;
+import jsinterop.annotations.JsProperty;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -69,18 +70,23 @@ public class Prova0 implements EntryPoint, UncaughtExceptionHandler, ScheduledCo
 
 
 
+	 
+	//read from 'ambient', i.e. hostpage :)
+	@JsProperty(namespace=JsPackage.GLOBAL,name="currentUser")
+	public static native UserData getCurrentUser();
+
 
 
 	@Override
 	public void execute() {
-		//get the user data from the hostpage
-		Dictionary currentUser = Dictionary.getDictionary("currentUser");
-		Dictionary currentUserMoreData = Dictionary.getDictionary("currentUserMoreData");
+	
 		
+		UserData currentUser = getCurrentUser();
 		if(currentUser == null) {
 			Window.alert("No User Info Available");
 			return;
 		} 
+		
 		
 		ClientFactory clientFactory = GWT.create(ClientFactory.class);
 
@@ -99,28 +105,17 @@ public class Prova0 implements EntryPoint, UncaughtExceptionHandler, ScheduledCo
 
 		PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
 		historyHandler.register(placeController, eventBus, defaultPlace);
+		
 
-		
-		
-		
-		//naive and cumbersome, a native type for userinfo would be really better
-		Set<String> attrs = currentUser.keySet();
-		Set<String> moreAttrs = currentUserMoreData.keySet();
-		
+		//setup email and picture for display purpose
 		String picture = null;
-		if(attrs.contains("picture") && moreAttrs.contains("realPicture"))
-			picture = currentUser.get("picture");
+		if(!currentUser.isSilhouette() )
+			picture = currentUser.getPicture();
 		
-		String name = currentUser.get("name");
-		//String email = currentUser.get("email");
-		
-		
+		String name = currentUser.getName();		
 		if(name == null || name.trim().length() == 0) { //use the email as a fallback
-			name = currentUser.get("email");
+			name = currentUser.getEmail();
 		}
-		
-		
-		 
 		appView.getMenu().setCurrentUserDisplayData(name,picture);
 
 		
