@@ -6,19 +6,31 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import com.mancini.prova0.client.applayout.AppView;
 import com.mancini.prova0.client.home.HelloView;
+import com.mancini.prova0.client.profile.AccountView;
 
 public class ClientFactory {
     private final EventBus eventBus = new SimpleEventBus();
     private final PlaceController placeController = new PlaceController(eventBus);
-    private AppView appView = null;
-	private HelloView helloView = null;
 	private AppPlaceHistoryMapper historyMapper = GWT.create(AppPlaceHistoryMapper.class);
+
+    private AppView appView;
+	private HelloView helloView ;
+	private AccountView accountView;
 
 
     //@Override
     public EventBus getEventBus() {
         return eventBus;
     }
+    public void goTo(String prefix) {
+		placeController.goTo( historyMapper.getPlace(prefix));
+	}
+
+
+	public AppPlaceHistoryMapper getHistoryMapper() {
+		return historyMapper;
+	}
+
     
     
     //@Override 
@@ -43,14 +55,11 @@ public class ClientFactory {
 		return helloView;
 	}
 
-
-	public void goTo(String prefix) {
-		placeController.goTo( historyMapper.getPlace(prefix));
-	}
-
-
-	public AppPlaceHistoryMapper getHistoryMapper() {
-		return historyMapper;
+	public AccountView getAccountView(AccountView.Presenter presenter) {
+		if(accountView == null)
+			accountView = new AccountView();
+		accountView.setPresenter(presenter);
+		return accountView;
 	}
     
     

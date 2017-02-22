@@ -26,6 +26,7 @@ import com.mancini.prova0.client.applayout.AppView.Presenter;
 import com.mancini.prova0.client.applayout.SimpleMenuEntry;
 import com.mancini.prova0.client.home.HelloPlace;
 import com.mancini.prova0.client.info.InfoPlace;
+import com.mancini.prova0.client.profile.AccountPlace;
 import com.mancini.prova0.shared.UserData;
 
 import gwt.material.design.client.constants.IconType;
@@ -56,12 +57,11 @@ public class Prova0 implements EntryPoint, UncaughtExceptionHandler, ScheduledCo
 	private static final List<MenuEntryData> mainMenu = 
 			Arrays.asList( 
 					new MenuEntryData("Home", IconType.HOME,  HelloPlace.prefix),
+					new MenuEntryData("Profile", IconType.ACCOUNT_CIRCLE,  AccountPlace.prefix),
 					new MenuEntryData("Info", IconType.INFO,  InfoPlace.prefix)
 					);
 
 	
-
-
 
 	public void onModuleLoad() {	
 		GWT.setUncaughtExceptionHandler( this); 
@@ -74,7 +74,6 @@ public class Prova0 implements EntryPoint, UncaughtExceptionHandler, ScheduledCo
 	//read from 'ambient', i.e. hostpage :)
 	@JsProperty(namespace=JsPackage.GLOBAL,name="currentUser")
 	public static native UserData getCurrentUser();
-
 
 
 	@Override
