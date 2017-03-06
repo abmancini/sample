@@ -27,6 +27,7 @@ import com.mancini.prova0.client.applayout.SimpleMenuEntry;
 import com.mancini.prova0.client.home.HelloPlace;
 import com.mancini.prova0.client.info.InfoPlace;
 import com.mancini.prova0.client.profile.AccountPlace;
+import com.mancini.prova0.client.totali.TotaliPlace;
 import com.mancini.prova0.shared.UserData;
 
 import gwt.material.design.client.constants.IconType;
@@ -58,7 +59,8 @@ public class Prova0 implements EntryPoint, UncaughtExceptionHandler, ScheduledCo
 			Arrays.asList( 
 					new MenuEntryData("Home", IconType.HOME,  HelloPlace.prefix),
 					new MenuEntryData("Profile", IconType.ACCOUNT_CIRCLE,  AccountPlace.prefix),
-					new MenuEntryData("Info", IconType.INFO,  InfoPlace.prefix)
+					new MenuEntryData("Info", IconType.INFO,  InfoPlace.prefix),
+					new MenuEntryData("Totali", IconType.ACCOUNT_BALANCE,  TotaliPlace.prefix)
 					);
 
 	

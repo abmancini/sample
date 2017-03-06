@@ -6,6 +6,19 @@
          xmlns="http://java.sun.com/xml/ns/javaee">
   
 
+
+
+<servlet>
+	<servlet-name>AccountsServlet</servlet-name>
+	<servlet-class>com.mancini.prova0.server.AccountServicesImpl</servlet-class>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>AccountsServlet</servlet-name>
+	<url-pattern>/prova0/accounts</url-pattern>
+</servlet-mapping>
+
+
 <servlet>
 	<servlet-name>AuthServlet</servlet-name>
 	<servlet-class>com.mancini.prova0.server.AuthServlet</servlet-class>

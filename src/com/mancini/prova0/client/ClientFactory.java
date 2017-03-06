@@ -7,6 +7,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.mancini.prova0.client.applayout.AppView;
 import com.mancini.prova0.client.home.HelloView;
 import com.mancini.prova0.client.profile.AccountView;
+import com.mancini.prova0.client.totali.TotaliView;
 
 public class ClientFactory {
     private final EventBus eventBus = new SimpleEventBus();
@@ -16,6 +17,7 @@ public class ClientFactory {
     private AppView appView;
 	private HelloView helloView ;
 	private AccountView accountView;
+	private TotaliView totaliView;
 
 
     //@Override
@@ -60,6 +62,12 @@ public class ClientFactory {
 			accountView = new AccountView();
 		accountView.setPresenter(presenter);
 		return accountView;
+	}
+	public TotaliView getTotaliView(TotaliView.Presenter presenter) {
+		if(totaliView == null)
+			totaliView = new TotaliView();
+			totaliView.setPresenter(presenter);
+		return totaliView;
 	}
     
     
